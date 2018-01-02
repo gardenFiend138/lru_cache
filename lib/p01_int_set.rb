@@ -62,33 +62,50 @@ class IntSet
   end
 end
 
-class ResizingIntSet
-  attr_reader :count
+class ResizingIntSet < IntSet
+  attr_accessor :count, :store 
 
   def initialize(num_buckets = 20)
-    @store = Array.new(num_buckets) { Array.new }
-    @count = 0
+    self.store = Array.new(num_buckets) { Array.new }
+    self.count = 0
   end
 
   def insert(num)
+    if super(num)
+      self.count += 1 
+      resize! if self.count >= num_buckets
+    end 
   end
 
   def remove(num)
+    self.count -= 1 if super(num)
   end
 
   def include?(num)
+    super(num)
   end
 
   private
 
-  def [](num)
-    # optional but useful; return the bucket corresponding to `num`
-  end
-
+  # def [](num)
+  #   # optional but useful; return the bucket corresponding to `num`
+  # end
+  
   def num_buckets
-    @store.length
+    self.store.length
   end
 
   def resize!
+    previous = self.store
+    self.store = Array.new(previous.length * 2) { Array.new }
+    self.count = 0 
+    
+    previous.each do |bucket|
+      bucket.each do |num|
+        insert(num)
+      end 
+    end 
+    self
+    
   end
 end
