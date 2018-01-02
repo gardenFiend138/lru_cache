@@ -3,15 +3,14 @@ class Fixnum
 end
 
 class Array
-  # call .to_i so can use this for String#hash
   def hash
     hashed_result = self.length.hash
-    
+
     self.each_with_index do |el, idx|
-      hashed_result += (el.to_i.hash + idx).hash
-    end 
-  
-    hashed_result.hash 
+      hashed_result += (el.hash + idx).hash
+    end
+
+    hashed_result.hash
   end
 end
 
@@ -19,12 +18,12 @@ class String
   def hash
     hashed_result = self.length.hash
     chars = self.split('')
-    
+
     chars.each_with_index do |el, idx|
       hashed_result += (el.to_i(36).hash + idx).hash
-    end 
-  
-    hashed_result.hash 
+    end
+
+    hashed_result.hash
   end
 end
 
